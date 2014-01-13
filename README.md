@@ -29,7 +29,13 @@ If you use [Bedrock](https://github.com/roots/bedrock), `WP_ENV` is already defi
 
 ## Installation
 
-If you're using Composer to manage WordPress, open up your `composer.json` and add wp-stage-switcher to your project's dependencies:
+If you're using Composer to manage WordPress, add wp-stage-switcher to your project's dependencies. Run:
+
+```sh
+composer require roots/wp-stage-switcher 1.0.0
+```
+
+Or manually add it to your `composer.json`:
 
 ```json
 "require": {
