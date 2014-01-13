@@ -2,6 +2,8 @@
 
 A WordPress plugin that allows you to switch between different environments from the admin bar.
 
+![WordPress Stage Switcher](http://roots.io/media/wordpress-stage-switcher.png)
+
 ## Requirements
 
 You'll need to have `ENVIRONMENTS` and `WP_ENV` defined in your WordPress config.
