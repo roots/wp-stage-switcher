@@ -1,0 +1,30 @@
+{
+  "name": "roots/wp-stage-switcher",
+  "type": "wordpress-plugin",
+  "license": "MIT",
+  "description": "WordPress plugin that allows you to switch between different environments from the admin bar",
+  "homepage": "http://roots.io/plugin/stage-switcher/",
+  "authors": [
+    {
+      "name": "Ben Word",
+      "email": "ben@benword.com",
+      "homepage": "https://github.com/retlehs"
+    },
+    {
+      "name": "Scott Walkinshaw",
+      "email": "scott.walkinshaw@gmail.com",
+      "homepage": "https://github.com/swalkinshaw"
+    }
+  ],
+  "keywords": [
+    "wordpress"
+  ],
+  "support": {
+    "issues": "https://github.com/roots/wp-stage-switcher/issues",
+    "forum": "http://discourse.roots.io/"
+  },
+  "require": {
+    "php": ">=5.3.0",
+    "composer/installers": "~1.0"
+  }
+}
