@@ -28,7 +28,7 @@ namespace Roots\Bedrock;
  * WP_ENV must be defined as the current environment
  */
 function admin_bar_stage_switcher($admin_bar) {
-  if (defined(ENVIRONMENTS) && defined(WP_ENV)) {
+  if (defined('ENVIRONMENTS') && defined('WP_ENV')) {
     $stages = unserialize(ENVIRONMENTS);
     $current_stage = WP_ENV;
   } else {
@@ -36,7 +36,7 @@ function admin_bar_stage_switcher($admin_bar) {
   }
 
   $admin_bar->add_menu(array(
-    'id'     => $current_stage,
+    'id'     => 'environment',
     'parent' => 'top-secondary',
     'title'  => ucwords($current_stage),
     'href'   => '#'
@@ -51,7 +51,7 @@ function admin_bar_stage_switcher($admin_bar) {
 
     $admin_bar->add_menu(array(
       'id'     => $stage,
-      'parent' => $current_stage,
+      'parent' => 'environment',
       'title'  => ucwords($stage),
       'href'   => $url
     ));
