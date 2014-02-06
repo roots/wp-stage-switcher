@@ -3,10 +3,11 @@
 Plugin Name:  Stage Switcher
 Plugin URI:   http://roots.io/plugins/stage-switcher/
 Description:  A WordPress plugin that allows you to switch between different environments from the admin bar.
-Version:      1.0.0
+Version:      1.0.1
 Author:       Ben Word
 Author URI:   http://roots.io/
 License:      MIT License
+GitHub Plugin URI: https://github.com/roots/wp-stage-switcher
 */
 
 namespace Roots\Bedrock;
@@ -41,12 +42,14 @@ function admin_bar_stage_switcher($admin_bar) {
     'href'   => '#'
   ));
 
+  $protocol = ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_PORT'] == 443) ? 'https://' : 'http://';
+
   foreach($stages as $stage => $url) {
     if ($stage === $current_stage) {
       continue;
     }
 
-    $url .= $_SERVER['REQUEST_URI'];
+    $url .= str_replace($stages[$current_stage], '', $protocol . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
 
     $admin_bar->add_menu(array(
       'id'     => $stage,
