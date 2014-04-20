@@ -3,7 +3,7 @@
 Plugin Name:  Stage Switcher
 Plugin URI:   http://roots.io/plugins/stage-switcher/
 Description:  A WordPress plugin that allows you to switch between different environments from the admin bar.
-Version:      1.0.1
+Version:      1.0.2
 Author:       Ben Word
 Author URI:   http://roots.io/
 License:      MIT License
@@ -42,17 +42,28 @@ function admin_bar_stage_switcher($admin_bar) {
     'href'   => '#'
   ));
 
-  $protocol = ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_PORT'] == 443) ? 'https://' : 'http://';
+  $host_bits = explode('.', $_SERVER['HTTP_HOST']);
+  $is_ms_subdomain = (is_multisite() && defined('SUBDOMAIN_INSTALL') && SUBDOMAIN_INSTALL && count($host_bits) > 2);
 
   foreach($stages as $stage => $url) {
     if ($stage === $current_stage) {
       continue;
     }
 
-    $url .= str_replace($stages[$current_stage], '', $protocol . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
+    if ($is_ms_subdomain) {
+      $subdomain = $host_bits[0];
+      $stage_host = parse_url($url, PHP_URL_HOST);
+      $subd_stage_host = "$subdomain.$stage_host";
+      $url = str_replace($stage_host, $subd_stage_host, $url);
+      $url = rtrim($url, '/') . $_SERVER['REQUEST_URI'];
+    } else {
+      $stage_scheme = parse_url($stages[$current_stage], PHP_URL_SCHEME);
+      $cur_stage_base = str_replace("$stage_scheme://", '', $stages[$current_stage]);
+      $url .= str_replace($cur_stage_base, '', $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
+    }
 
     $admin_bar->add_menu(array(
-      'id'     => $stage,
+      'id'     => "stage_$stage",
       'parent' => 'environment',
       'title'  => ucwords($stage),
       'href'   => $url
