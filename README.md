@@ -32,7 +32,7 @@ If you use [Bedrock](https://github.com/roots/bedrock), `WP_ENV` is already defi
 If you're using Composer to manage WordPress, add wp-stage-switcher to your project's dependencies. Run:
 
 ```sh
-composer require roots/wp-stage-switcher 1.0.1
+composer require roots/wp-stage-switcher 1.0.2
 ```
 
 Or manually add it to your `composer.json`:
@@ -41,7 +41,7 @@ Or manually add it to your `composer.json`:
 "require": {
   "php": ">=5.3.0",
   "wordpress": "3.8",
-  "roots/wp-stage-switcher": "1.0.1"
+  "roots/wp-stage-switcher": "1.0.2"
 }
 ```
 
