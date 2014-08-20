@@ -3,7 +3,7 @@
 Plugin Name:  Stage Switcher
 Plugin URI:   http://roots.io/plugins/stage-switcher/
 Description:  A WordPress plugin that allows you to switch between different environments from the admin bar.
-Version:      1.0.2
+Version:      1.0.3
 Author:       Ben Word
 Author URI:   http://roots.io/
 License:      MIT License
@@ -28,7 +28,7 @@ namespace Roots\Bedrock;
  * WP_ENV must be defined as the current environment
  */
 function admin_bar_stage_switcher($admin_bar) {
-  if (defined('ENVIRONMENTS') && defined('WP_ENV')) {
+  if (defined('ENVIRONMENTS') && defined('WP_ENV') && apply_filters('bedrock_stage_switcher_visibility', is_super_admin())) {
     $stages = unserialize(ENVIRONMENTS);
     $current_stage = WP_ENV;
   } else {
