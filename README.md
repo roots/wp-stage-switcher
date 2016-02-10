@@ -11,11 +11,11 @@ You'll need to have `ENVIRONMENTS` and `WP_ENV` defined in your WordPress config
 The `ENVIRONMENTS` constant must be a serialized array of `'environment' => 'url'` elements:
 
 ```php
-$envs = array(
+$envs = [
   'development' => 'http://example.dev',
   'staging'     => 'http://staging.example.com',
   'production'  => 'http://example.com'
-);
+];
 define('ENVIRONMENTS', serialize($envs));
 ```
 
@@ -29,19 +29,19 @@ If you use [Bedrock](https://github.com/roots/bedrock), `WP_ENV` is already defi
 
 ## Installation
 
-If you're using Composer to manage WordPress, add wp-stage-switcher to your project's dependencies. Run:
+This plugin must be installed via Composer. Add wp-stage-switcher to your project's dependencies:
 
 ```sh
-composer require roots/wp-stage-switcher 1.0.3
+composer require roots/wp-stage-switcher 2.0.0
 ```
 
 Or manually add it to your `composer.json`:
 
 ```json
 "require": {
-  "php": ">=5.3.0",
-  "wordpress": "3.9.2",
-  "roots/wp-stage-switcher": "1.0.3"
+  "php": ">=5.4.0",
+  "wordpress": "4.4.2",
+  "roots/wp-stage-switcher": "2.0.0"
 }
 ```
 
