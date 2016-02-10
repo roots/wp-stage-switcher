@@ -1,3 +1,6 @@
+### 2.0.0: February 10th, 2016
+* Rewrite plugin, require Composer
+
 ### 1.0.3: August 19th, 2014
 * Only show menu item for administrators, add filter for visibility control
 
