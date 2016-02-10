@@ -1,16 +1,24 @@
 <?php
 /*
 Plugin Name:  Stage Switcher
-Plugin URI:   http://roots.io/plugins/stage-switcher/
+Plugin URI:   https://roots.io/plugins/stage-switcher/
 Description:  A WordPress plugin that allows you to switch between different environments from the admin bar.
-Version:      1.0.3
-Author:       Ben Word
-Author URI:   http://roots.io/
+Version:      2.0.0
+Author:       Roots
+Author URI:   https://roots.io/
 License:      MIT License
-GitHub Plugin URI: https://github.com/roots/wp-stage-switcher
 */
 
-namespace Roots\Bedrock;
+namespace Roots\StageSwitcher;
+
+use Purl\Url;
+
+/**
+ * Require Composer autoloader if installed on it's own
+ */
+if (file_exists($composer = __DIR__ . '/vendor/autoload.php')) {
+  require_once $composer;
+}
 
 /**
  * Add stage/environment switcher to admin bar
@@ -18,66 +26,74 @@ namespace Roots\Bedrock;
  *
  * ENVIRONMENTS constant must be a serialized array of 'environment' => 'url' elements:
  *
- *   $envs = array(
+ *   $envs = [
  *    'development' => 'http://example.dev',
- *    'staging'     => 'http://staging.example.com',
+ *    'staging'     => 'http://example-staging.com',
  *    'production'  => 'http://example.com'
- *   );
+ *   ];
+ *
  *   define('ENVIRONMENTS', serialize($envs));
  *
  * WP_ENV must be defined as the current environment
  */
-function admin_bar_stage_switcher($admin_bar) {
-  if (defined('ENVIRONMENTS') && defined('WP_ENV') && apply_filters('bedrock_stage_switcher_visibility', is_super_admin())) {
+class StageSwitcher {
+  public function __construct() {
+    add_action('admin_bar_menu', [$this, 'admin_bar_stage_switcher']);
+    add_action('wp_before_admin_bar_render', [$this, 'admin_css']);
+  }
+
+  public function admin_bar_stage_switcher($admin_bar) {
+    if (!defined('ENVIRONMENTS') && !defined('WP_ENV') && !apply_filters('bedrock/stage_switcher_visibility', is_super_admin())) {
+      return;
+    }
+
     $stages = unserialize(ENVIRONMENTS);
     $current_stage = WP_ENV;
-  } else {
-    return;
+
+    foreach($stages as $stage => $url) {
+      if ($stage === $current_stage) {
+        continue;
+      }
+
+      if (is_multisite() && defined('SUBDOMAIN_INSTALL') && SUBDOMAIN_INSTALL && !is_main_site()) {
+        $url = $this->multisite_url($url) . $_SERVER['REQUEST_URI'];
+      } else {
+        $url .= $_SERVER['REQUEST_URI'];
+      }
+
+      $admin_bar->add_menu([
+        'id'     => 'environment',
+        'parent' => 'top-secondary',
+        'title'  => ucwords($current_stage),
+        'href'   => '#'
+      ]);
+
+      $admin_bar->add_menu([
+        'id'     => "stage_$stage",
+        'parent' => 'environment',
+        'title'  => ucwords($stage),
+        'href'   => $url
+      ]);
+    }
   }
 
-  $admin_bar->add_menu(array(
-    'id'     => 'environment',
-    'parent' => 'top-secondary',
-    'title'  => ucwords($current_stage),
-    'href'   => '#'
-  ));
+  public function admin_css() { ?>
+    <style>
+      #wp-admin-bar-environment > a:before {
+        content: "\f177";
+        top: 2px;
+      }
+    </style>
+    <?php
+  }
 
-  $host_bits = explode('.', $_SERVER['HTTP_HOST']);
-  $is_ms_subdomain = (is_multisite() && defined('SUBDOMAIN_INSTALL') && SUBDOMAIN_INSTALL && count($host_bits) > 2);
+  private function multisite_url($url) {
+    $stage_url = new Url($url);
+    $current_site = new Url(get_home_url(get_current_blog_id()));
+    $current_site->host = str_replace($current_site->registerableDomain, $stage_url->registerableDomain, $current_site->host);
 
-  foreach($stages as $stage => $url) {
-    if ($stage === $current_stage) {
-      continue;
-    }
-
-    if ($is_ms_subdomain) {
-      $subdomain = $host_bits[0];
-      $stage_host = parse_url($url, PHP_URL_HOST);
-      $subd_stage_host = "$subdomain.$stage_host";
-      $url = str_replace($stage_host, $subd_stage_host, $url);
-      $url = rtrim($url, '/') . $_SERVER['REQUEST_URI'];
-    } else {
-      $stage_scheme = parse_url($stages[$current_stage], PHP_URL_SCHEME);
-      $cur_stage_base = str_replace("$stage_scheme://", '', $stages[$current_stage]);
-      $url .= str_replace($cur_stage_base, '', $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
-    }
-
-    $admin_bar->add_menu(array(
-      'id'     => "stage_$stage",
-      'parent' => 'environment',
-      'title'  => ucwords($stage),
-      'href'   => $url
-    ));
+    return rtrim($current_site->getUrl(), '/') . $_SERVER['REQUEST_URI'];
   }
 }
-add_action('admin_bar_menu', 'Roots\\Bedrock\\admin_bar_stage_switcher');
 
-function admin_css() { ?>
-  <style>
-    #wp-admin-bar-environment > a:before {
-      content: "\f177";
-      top: 2px;
-    }
-  </style>
-<?php }
-add_action('wp_before_admin_bar_render', 'Roots\\Bedrock\\admin_css');
+new StageSwitcher;
