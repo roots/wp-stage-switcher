@@ -1,4 +1,6 @@
 # WordPress Stage Switcher
+[![Packagist](https://img.shields.io/packagist/v/roots/wp-stage-switcher.svg?style=flat-square)](https://packagist.org/packages/roots/wp-stage-switcher)
+[![Packagist Downloads](https://img.shields.io/packagist/dt/roots/wp-stage-switcher.svg?style=flat-square)](https://packagist.org/packages/roots/wp-stage-switcher)
 
 A WordPress plugin that allows you to switch between different environments from the admin bar.
 
