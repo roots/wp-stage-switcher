@@ -65,7 +65,10 @@ class StageSwitcher {
         'id'     => 'environment',
         'parent' => 'top-secondary',
         'title'  => ucwords($current_stage),
-        'href'   => '#'
+        'href'   => '#',
+        'meta'   => [
+          'class' => 'environment-' . sanitize_html_class(strtolower($current_stage)),
+        ],
       ]);
 
       $admin_bar->add_menu([
