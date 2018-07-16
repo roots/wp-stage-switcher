@@ -43,7 +43,7 @@ class StageSwitcher {
   }
 
   public function admin_bar_stage_switcher($admin_bar) {
-    if (!defined('ENVIRONMENTS') && !defined('WP_ENV') && !apply_filters('bedrock/stage_switcher_visibility', is_super_admin())) {
+    if (!defined('ENVIRONMENTS') || !defined('WP_ENV') || !apply_filters('bedrock/stage_switcher_visibility', is_super_admin())) {
       return;
     }
 
