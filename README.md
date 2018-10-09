@@ -21,6 +21,8 @@ $envs = [
 define('ENVIRONMENTS', serialize($envs));
 ```
 
+Note: the `serialize()` call is not needed on PHP 7.0 or newer.
+
 `WP_ENV` must be defined as the current environment:
 
 ```php
