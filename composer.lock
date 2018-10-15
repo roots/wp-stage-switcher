@@ -1,11 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "hash": "272950bbfc9a9bae8fb2f5129bf609fc",
-    "content-hash": "a1146e6795bfbdd2ccd03cc424c5b8ea",
+    "content-hash": "f39947e26d0a887ccdf8a53bf36ecfb0",
     "packages": [
         {
             "name": "composer/installers",
@@ -103,100 +102,7 @@
                 "zend",
                 "zikula"
             ],
-            "time": "2016-01-27 12:54:22"
-        },
-        {
-            "name": "jeremykendall/php-domain-parser",
-            "version": "1.3.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/jeremykendall/php-domain-parser.git",
-                "reference": "1bff611986695be31959ca4257259f702afa0b85"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/jeremykendall/php-domain-parser/zipball/1bff611986695be31959ca4257259f702afa0b85",
-                "reference": "1bff611986695be31959ca4257259f702afa0b85",
-                "shasum": ""
-            },
-            "require": {
-                "ext-curl": "*",
-                "php": ">=5.3.0"
-            },
-            "require-dev": {
-                "mikey179/vfsstream": "1.2.*",
-                "phpunit/phpunit": "4.*"
-            },
-            "bin": [
-                "bin/parse",
-                "bin/pdp-psl"
-            ],
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Pdp\\": "library/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jeremy Kendall",
-                    "homepage": "http://about.me/jeremykendall",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Public Suffix List based URL parsing implemented in PHP.",
-            "keywords": [
-                "Public Suffix List",
-                "domain parsing",
-                "url parsing"
-            ],
-            "time": "2014-06-10 15:10:40"
-        },
-        {
-            "name": "jwage/purl",
-            "version": "v0.0.6",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/jwage/purl.git",
-                "reference": "81fca2c75232cd400bef5d7dbaa13a397dc788c8"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/jwage/purl/zipball/81fca2c75232cd400bef5d7dbaa13a397dc788c8",
-                "reference": "81fca2c75232cd400bef5d7dbaa13a397dc788c8",
-                "shasum": ""
-            },
-            "require": {
-                "jeremykendall/php-domain-parser": "1.3.1",
-                "php": ">=5.3.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Purl": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jonathan H. Wage",
-                    "email": "jonwage@gmail.com"
-                }
-            ],
-            "description": "URL Manipulation for PHP 5.3",
-            "homepage": "http://github.com/jwage/purl",
-            "keywords": [
-                "manipulation",
-                "url"
-            ],
-            "time": "2014-07-30 15:53:08"
+            "time": "2016-01-27T12:54:22+00:00"
         }
     ],
     "packages-dev": [],
@@ -206,7 +112,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=5.3.0"
+        "php": ">=5.4.0"
     },
     "platform-dev": []
 }
