@@ -36,7 +36,7 @@ if (file_exists($composer = __DIR__ . '/vendor/autoload.php')) {
  *
  * If you're using PHP 5.6 or older you must serialize $envs first:
  *
- *   define( 'ENVIRONMENTS', serialize( $envs ) );
+ *   define('ENVIRONMENTS', serialize($envs));
  *
  * WP_ENV must be defined as the current environment.
  */
@@ -51,7 +51,7 @@ class StageSwitcher {
       return;
     }
 
-    $stages = maybe_unserialize( ENVIRONMENTS );
+    $stages = maybe_unserialize(ENVIRONMENTS);
     $current_stage = WP_ENV;
 
     foreach($stages as $stage => $url) {
