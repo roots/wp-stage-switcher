@@ -24,7 +24,7 @@ if (file_exists($composer = __DIR__ . '/vendor/autoload.php')) {
  * Add stage/environment switcher to admin bar
  * Inspired by http://37signals.com/svn/posts/3535-beyond-the-default-rails-environments
  *
- * ENVIRONMENTS constant must be a serialized array of 'environment' => 'url' elements:
+ * ENVIRONMENTS constant must be an array of 'environment' => 'url' elements:
  *
  *   $envs = [
  *    'development' => 'http://example.dev',
@@ -32,9 +32,13 @@ if (file_exists($composer = __DIR__ . '/vendor/autoload.php')) {
  *    'production'  => 'http://example.com'
  *   ];
  *
+ *   define( 'ENVIRONMENTS', $envs );
+ *
+ * If you're using PHP 5.6 or older you must serialize $envs first:
+ *
  *   define('ENVIRONMENTS', serialize($envs));
  *
- * WP_ENV must be defined as the current environment
+ * WP_ENV must be defined as the current environment.
  */
 class StageSwitcher {
   public function __construct() {
@@ -47,7 +51,7 @@ class StageSwitcher {
       return;
     }
 
-    $stages = unserialize(ENVIRONMENTS);
+    $stages = maybe_unserialize(ENVIRONMENTS);
     $current_stage = WP_ENV;
 
     foreach($stages as $stage => $url) {
