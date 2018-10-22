@@ -11,8 +11,6 @@ License:      MIT License
 
 namespace Roots\StageSwitcher;
 
-use Purl\Url;
-
 /**
  * Require Composer autoloader if installed on it's own
  */
@@ -95,11 +93,12 @@ class StageSwitcher {
   }
 
   private function multisite_url($url) {
-    $stage_url = new Url($url);
-    $current_site = new Url(get_home_url(get_current_blog_id()));
-    $current_site->host = str_replace($current_site->registerableDomain, $stage_url->registerableDomain, $current_site->host);
+    $stage_host = wp_parse_url($url, PHP_URL_HOST);
+    $current_url = get_home_url(get_current_blog_id());
+    $current_host = wp_parse_url($current_url, PHP_URL_HOST);
+    $current_url= str_replace($current_host, $stage_host, $current_url);
 
-    return rtrim($current_site->getUrl(), '/') . $_SERVER['REQUEST_URI'];
+    return rtrim($current_url, '/') . $_SERVER['REQUEST_URI'];
   }
 }
 
