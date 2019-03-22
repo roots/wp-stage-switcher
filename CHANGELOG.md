@@ -1,3 +1,8 @@
+### 2.1.0: March 29th, 2019
+* Add CSS class for current environment to top menu item
+* Fix Admin Bar menu visibility logic from 'and' to 'or' condition
+* Remove jwage/purl dependency
+
 ### 2.0.0: February 10th, 2016
 * Rewrite plugin, require Composer
 
