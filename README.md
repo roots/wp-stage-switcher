@@ -43,8 +43,8 @@ Or manually add it to your `composer.json`:
 
 ```json
 "require": {
-  "php": ">=5.4.0",
-  "wordpress": "4.4.2",
+  "php": ">=7.1",
+  "roots/wordpress": "5.1.1",
   "roots/wp-stage-switcher": "~2.0"
 }
 ```
