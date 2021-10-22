@@ -1,5 +1,5 @@
 ### 2.1.1: October 21st, 2021
-* Add Composer 2 support
+* Add `composer/installers` 2.x support
 
 ### 2.1.0: March 29th, 2019
 * Add CSS class for current environment to top menu item
