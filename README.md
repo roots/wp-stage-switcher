@@ -45,7 +45,7 @@ Or manually add it to your `composer.json`:
 "require": {
   "php": ">=7.1",
   "roots/wordpress": "5.1.1",
-  "roots/wp-stage-switcher": "~2.0"
+  "roots/wp-stage-switcher": "~2.1"
 }
 ```
 
