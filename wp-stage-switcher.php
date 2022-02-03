@@ -83,7 +83,7 @@ class StageSwitcher {
 
   public function admin_css() { ?>
     <style>
-      #wp-admin-bar-environment > a:before {
+      #wpadminbar #wp-admin-bar-environment > .ab-item:before {
         content: "\f177";
         top: 2px;
       }
