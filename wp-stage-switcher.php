@@ -12,13 +12,6 @@ License:      MIT License
 namespace Roots\StageSwitcher;
 
 /**
- * Require Composer autoloader if installed on it's own
- */
-if (file_exists($composer = __DIR__ . '/vendor/autoload.php')) {
-  require_once $composer;
-}
-
-/**
  * Add stage/environment switcher to admin bar
  * Inspired by http://37signals.com/svn/posts/3535-beyond-the-default-rails-environments
  *
