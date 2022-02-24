@@ -12,13 +12,6 @@ License:      MIT License
 namespace Roots\StageSwitcher;
 
 /**
- * Require Composer autoloader if installed on it's own
- */
-if (file_exists($composer = __DIR__ . '/vendor/autoload.php')) {
-  require_once $composer;
-}
-
-/**
  * Add stage/environment switcher to admin bar
  * Inspired by http://37signals.com/svn/posts/3535-beyond-the-default-rails-environments
  *
@@ -37,8 +30,14 @@ if (file_exists($composer = __DIR__ . '/vendor/autoload.php')) {
  *   define('ENVIRONMENTS', serialize($envs));
  *
  * WP_ENV must be defined as the current environment.
+ *
+ * For multisite subdomain installations, the host portion of the specified
+ * environment URL will be treated as a suffix in constructing a matching blog
+ * URL in that environment.
  */
 class StageSwitcher {
+  private $stages;
+
   public function __construct() {
     add_action('admin_bar_menu', [$this, 'admin_bar_stage_switcher']);
     add_action('wp_before_admin_bar_render', [$this, 'admin_css']);
@@ -49,29 +48,29 @@ class StageSwitcher {
       return;
     }
 
-    $stages = maybe_unserialize(ENVIRONMENTS);
-    $current_stage = WP_ENV;
+    $this->stages = maybe_unserialize(ENVIRONMENTS);
+    $subdomain_multisite = is_multisite() && is_subdomain_install();
 
-    foreach($stages as $stage => $url) {
-      if ($stage === $current_stage) {
+    $admin_bar->add_menu([
+      'id'     => 'environment',
+      'parent' => 'top-secondary',
+      'title'  => ucwords(WP_ENV),
+      'href'   => '#',
+      'meta'   => [
+        'class' => 'environment-' . sanitize_html_class(strtolower(WP_ENV)),
+      ],
+    ]);
+
+    foreach ($this->stages as $stage => $url) {
+      if ($stage === WP_ENV) {
         continue;
       }
 
-      if (is_multisite() && defined('SUBDOMAIN_INSTALL') && SUBDOMAIN_INSTALL && !is_main_site()) {
-        $url = $this->multisite_url($url) . $_SERVER['REQUEST_URI'];
-      } else {
-        $url .= $_SERVER['REQUEST_URI'];
+      if ($subdomain_multisite) {
+        $url = $this->multisite_url($url);
       }
 
-      $admin_bar->add_menu([
-        'id'     => 'environment',
-        'parent' => 'top-secondary',
-        'title'  => ucwords($current_stage),
-        'href'   => '#',
-        'meta'   => [
-          'class' => 'environment-' . sanitize_html_class(strtolower($current_stage)),
-        ],
-      ]);
+      $url = apply_filters('bedrock/stage_switcher_url', rtrim($url, '/') . $_SERVER['REQUEST_URI'], $url, $stage);
 
       $admin_bar->add_menu([
         'id'     => "stage_$stage",
@@ -84,7 +83,7 @@ class StageSwitcher {
 
   public function admin_css() { ?>
     <style>
-      #wp-admin-bar-environment > a:before {
+      #wpadminbar #wp-admin-bar-environment > .ab-item:before {
         content: "\f177";
         top: 2px;
       }
@@ -93,12 +92,18 @@ class StageSwitcher {
   }
 
   private function multisite_url($url) {
-    $stage_host = wp_parse_url($url, PHP_URL_HOST);
-    $current_url = get_home_url(get_current_blog_id());
-    $current_host = wp_parse_url($current_url, PHP_URL_HOST);
-    $current_url= str_replace($current_host, $stage_host, $current_url);
+    // Normalize URL to ensure it can be successfully parsed
+    $url = esc_url($url);
 
-    return rtrim($current_url, '/') . $_SERVER['REQUEST_URI'];
+    $current_host = wp_parse_url(get_home_url(get_current_blog_id()), PHP_URL_HOST);
+    $current_stage_host_suffix = wp_parse_url($this->stages[WP_ENV], PHP_URL_HOST);
+    $target_stage_host_suffix = wp_parse_url($url, PHP_URL_HOST);
+
+    // Using preg_replace to anchor to the end of the host string
+    $target_host = preg_replace('/' . preg_quote($current_stage_host_suffix) . '$/', $target_stage_host_suffix, $current_host);
+
+    // Use the stage URL as the base for replacement to keep scheme/port
+    return str_replace($target_stage_host_suffix, $target_host, $url);
   }
 }
 
