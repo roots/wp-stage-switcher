@@ -1,3 +1,6 @@
+### 2.2.0: May 31st, 2022
+* Multisite refactor
+
 ### 2.1.1: October 21st, 2021
 * Add `composer/installers` 2.x support
 
