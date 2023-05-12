@@ -76,7 +76,10 @@ class StageSwitcher {
         'id'     => "stage_$stage",
         'parent' => 'environment',
         'title'  => ucwords($stage),
-        'href'   => $url
+        'href'   => $url,
+        'meta'   => [
+          'class' => 'environment-' . sanitize_html_class(strtolower($stage)),
+        ],
       ]);
     }
   }
