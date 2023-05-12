@@ -90,6 +90,19 @@ class StageSwitcher {
         content: "\f177";
         top: 2px;
       }
+
+      <?php
+      if (apply_filters('bedrock/stage_switcher_colors', self::default_environment_colors())) {
+        foreach ($this->stages as $stage) {
+          if (empty($environment_colors[$stage])) {
+              continue;
+          } ?>
+          #wpadminbar #wp-admin-bar-environment .environment-<?php echo sanitize_html_class(strtolower($stage)); ?> {
+            background-color: <?php $environment_colors[$stage] ?>;
+          }
+      <?php
+        }
+      } ?>
     </style>
     <?php
   }
@@ -107,6 +120,14 @@ class StageSwitcher {
 
     // Use the stage URL as the base for replacement to keep scheme/port
     return str_replace($target_stage_host_suffix, $target_host, $url);
+  }
+
+  private static function default_environment_colors() {
+    return [
+      'development' => 'firebrick',
+      'staging'     => 'chocolate',
+      'production'  => 'transparent',
+    ];
   }
 }
 
