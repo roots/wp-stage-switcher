@@ -92,13 +92,23 @@ class StageSwitcher {
       }
 
       <?php
-      if (apply_filters('bedrock/stage_switcher_colors', self::default_environment_colors())) {
-        foreach ($this->stages as $stage) {
+      $environment_colors = apply_filters('bedrock/stage_switcher_colors', self::default_environment_colors());
+      if (!empty($environment_colors) && !empty($this->stages)) {
+        // Style the current environment (parent menu item)
+        if (defined('WP_ENV') && !empty($environment_colors[WP_ENV])) { ?>
+          #wpadminbar #wp-admin-bar-environment {
+            background-color: <?= $environment_colors[WP_ENV]; ?>;
+          }
+      <?php
+        }
+
+        // Style other environments (child menu items)
+        foreach ($this->stages as $stage => $url) {
           if (empty($environment_colors[$stage])) {
               continue;
           } ?>
-          #wpadminbar #wp-admin-bar-environment .environment-<?php echo sanitize_html_class(strtolower($stage)); ?> {
-            background-color: <?php $environment_colors[$stage] ?>;
+          #wpadminbar #wp-admin-bar-stage_<?= sanitize_html_class(strtolower($stage)); ?> {
+            background-color: <?= $environment_colors[$stage]; ?>;
           }
       <?php
         }
