@@ -3,7 +3,7 @@
 Plugin Name:  Stage Switcher
 Plugin URI:   https://roots.io/plugins/stage-switcher/
 Description:  A WordPress plugin that allows you to switch between different environments from the admin bar.
-Version:      2.2.0
+Version:      2.3.0
 Author:       Roots
 Author URI:   https://roots.io/
 License:      MIT License
@@ -23,11 +23,7 @@ namespace Roots\StageSwitcher;
  *    'production'  => 'http://example.com'
  *   ];
  *
- *   define( 'ENVIRONMENTS', $envs );
- *
- * If you're using PHP 5.6 or older you must serialize $envs first:
- *
- *   define('ENVIRONMENTS', serialize($envs));
+ *   Config::define('ENVIRONMENTS', $envs);
  *
  * WP_ENV must be defined as the current environment.
  *

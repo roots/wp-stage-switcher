@@ -1,3 +1,6 @@
+### 2.3.0: October 16th, 2025
+* Add background colors to environment menu
+
 ### 2.2.0: May 31st, 2022
 * Multisite refactor
 

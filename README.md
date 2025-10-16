@@ -10,7 +10,7 @@ A WordPress plugin that allows you to switch between different environments from
 
 You'll need to have `ENVIRONMENTS` and `WP_ENV` defined in your WordPress config.
 
-The `ENVIRONMENTS` constant must be a serialized array of `'environment' => 'url'` elements:
+The `ENVIRONMENTS` constant must be an array of `'environment' => 'url'` elements:
 
 ```php
 $envs = [
@@ -18,10 +18,8 @@ $envs = [
   'staging'     => 'http://staging.example.com',
   'production'  => 'http://example.com'
 ];
-Config::define('ENVIRONMENTS', serialize($envs));
+Config::define('ENVIRONMENTS', $envs);
 ```
-
-Note: the `serialize()` call is not needed on PHP 7.0 or newer.
 
 `WP_ENV` must be defined as the current environment:
 
@@ -37,16 +35,6 @@ This plugin must be installed via Composer. Add wp-stage-switcher to your projec
 
 ```sh
 composer require roots/wp-stage-switcher
-```
-
-Or manually add it to your `composer.json`:
-
-```json
-"require": {
-  "php": ">=7.1",
-  "roots/wordpress": "5.1.1",
-  "roots/wp-stage-switcher": "~2.1"
-}
 ```
 
 ## Filters
