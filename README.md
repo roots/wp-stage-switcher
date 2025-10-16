@@ -18,7 +18,7 @@ $envs = [
   'staging'     => 'http://staging.example.com',
   'production'  => 'http://example.com'
 ];
-define('ENVIRONMENTS', serialize($envs));
+Config::define('ENVIRONMENTS', serialize($envs));
 ```
 
 Note: the `serialize()` call is not needed on PHP 7.0 or newer.
@@ -26,7 +26,7 @@ Note: the `serialize()` call is not needed on PHP 7.0 or newer.
 `WP_ENV` must be defined as the current environment:
 
 ```php
-define('WP_ENV', 'development');
+Config::define('WP_ENV', 'development');
 ```
 
 If you use [Bedrock](https://github.com/roots/bedrock), `WP_ENV` is already defined in the config.
@@ -47,6 +47,43 @@ Or manually add it to your `composer.json`:
   "roots/wordpress": "5.1.1",
   "roots/wp-stage-switcher": "~2.1"
 }
+```
+
+## Filters
+
+### `bedrock/stage_switcher_colors`
+
+Customize the background colors for each environment in the admin bar menu. Returns an array of `'environment' => 'color'` pairs.
+
+Default colors:
+```php
+[
+  'development' => 'firebrick',
+  'staging'     => 'chocolate',
+  'production'  => 'transparent',
+]
+```
+
+Example usage:
+```php
+add_filter('bedrock/stage_switcher_colors', function ($colors) {
+  return [
+    'development' => '#dc2626',
+    'staging'     => '#ea580c',
+    'production'  => '#10b981',
+  ];
+});
+```
+
+### `bedrock/stage_switcher_visibility`
+
+Control who can see the stage switcher in the admin bar. Defaults to `is_super_admin()`.
+
+Example usage:
+```php
+add_filter('bedrock/stage_switcher_visibility', function ($visible) {
+  return current_user_can('manage_options');
+});
 ```
 
 ## Support
