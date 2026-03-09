@@ -1,6 +1,7 @@
 # WordPress Stage Switcher
 [![Packagist](https://img.shields.io/packagist/v/roots/wp-stage-switcher.svg?style=flat-square)](https://packagist.org/packages/roots/wp-stage-switcher)
 [![Packagist Downloads](https://img.shields.io/packagist/dt/roots/wp-stage-switcher?label=downloads&colorB=2b3072&colorA=525ddc&style=flat-square)](https://packagist.org/packages/roots/wp-stage-switcher)
+![Build Status](https://img.shields.io/github/actions/workflow/status/roots/wp-stage-switcher/main.yml?branch=master&style=flat-square)
 [![Follow Roots](https://img.shields.io/badge/follow%20@rootswp-1da1f2?logo=twitter&logoColor=ffffff&message=&style=flat-square)](https://twitter.com/rootswp)
 [![Sponsor Roots](https://img.shields.io/badge/sponsor%20roots-525ddc?logo=github&style=flat-square&logoColor=ffffff&message=)](https://github.com/sponsors/roots)
 
