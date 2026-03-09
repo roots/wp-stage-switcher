@@ -24,15 +24,17 @@
     "forum": "https://discourse.roots.io"
   },
   "require": {
-    "php": ">=8.1",
+    "php": ">=8.2",
     "composer/installers": "~1.0 || ~2.0"
   },
   "require-dev": {
-    "laravel/pint": "^1.20.0 <1.21"
+    "laravel/pint": "^1.20",
+    "pestphp/pest": "^2.36 || ^3.0 || ^4.0"
   },
   "config": {
     "allow-plugins": {
-      "composer/installers": true
+      "composer/installers": true,
+      "pestphp/pest-plugin": true
     }
   }
 }
