@@ -51,6 +51,7 @@ class StageSwitcher
         $this->stages = is_array($stages) ? $stages : [];
         $subdomain_multisite = is_multisite() && is_subdomain_install();
         $request_uri = isset($_SERVER['REQUEST_URI']) ? (string) $_SERVER['REQUEST_URI'] : '/';
+        $request_uri = $this->relative_uri($request_uri);
 
         $admin_bar->add_menu([
             'id' => 'environment',
@@ -140,6 +141,36 @@ class StageSwitcher
 
         // Use the stage URL as the base for replacement to keep scheme/port
         return str_replace($target_stage_host_suffix, $target_host, $url);
+    }
+
+    private function relative_uri(string $request_uri): string
+    {
+        $request_path = wp_parse_url($request_uri, PHP_URL_PATH);
+        $query = wp_parse_url($request_uri, PHP_URL_QUERY);
+
+        if (! is_string($request_path)) {
+            return $request_uri;
+        }
+
+        // Try runtime site path first, fall back to ENVIRONMENTS config path
+        $site_path = rtrim((string) wp_parse_url(site_url('/'), PHP_URL_PATH), '/');
+        $env_path = rtrim((string) wp_parse_url($this->stages[WP_ENV] ?? '', PHP_URL_PATH), '/');
+
+        $relative_path = null;
+
+        if ($site_path !== '' && ($request_path === $site_path || str_starts_with($request_path, $site_path.'/'))) {
+            $relative_path = substr($request_path, strlen($site_path));
+        } elseif ($env_path !== '' && ($request_path === $env_path || str_starts_with($request_path, $env_path.'/'))) {
+            $relative_path = substr($request_path, strlen($env_path));
+        }
+
+        if ($relative_path === null) {
+            return $request_uri;
+        }
+
+        $relative_path = '/'.ltrim($relative_path, '/');
+
+        return $relative_path.(is_string($query) && $query !== '' ? "?{$query}" : '');
     }
 
     private static function default_environment_colors(): array
