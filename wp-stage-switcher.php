@@ -33,7 +33,7 @@ namespace Roots\StageSwitcher;
  */
 class StageSwitcher
 {
-    private $stages;
+    private array $stages = [];
 
     public function __construct()
     {
@@ -41,14 +41,16 @@ class StageSwitcher
         add_action('wp_before_admin_bar_render', [$this, 'admin_css']);
     }
 
-    public function admin_bar_stage_switcher($admin_bar)
+    public function admin_bar_stage_switcher(\WP_Admin_Bar $admin_bar): void
     {
         if (! defined('ENVIRONMENTS') || ! defined('WP_ENV') || ! apply_filters('bedrock/stage_switcher_visibility', is_super_admin())) {
             return;
         }
 
-        $this->stages = maybe_unserialize(ENVIRONMENTS);
+        $stages = maybe_unserialize(ENVIRONMENTS);
+        $this->stages = is_array($stages) ? $stages : [];
         $subdomain_multisite = is_multisite() && is_subdomain_install();
+        $request_uri = isset($_SERVER['REQUEST_URI']) ? (string) $_SERVER['REQUEST_URI'] : '/';
 
         $admin_bar->add_menu([
             'id' => 'environment',
@@ -69,7 +71,7 @@ class StageSwitcher
                 $url = $this->multisite_url($url);
             }
 
-            $url = apply_filters('bedrock/stage_switcher_url', rtrim($url, '/').$_SERVER['REQUEST_URI'], $url, $stage);
+            $url = apply_filters('bedrock/stage_switcher_url', rtrim($url, '/').$request_uri, $url, $stage);
 
             $admin_bar->add_menu([
                 'id' => "stage_$stage",
@@ -83,7 +85,7 @@ class StageSwitcher
         }
     }
 
-    public function admin_css()
+    public function admin_css(): void
     { ?>
     <style>
       #wpadminbar #wp-admin-bar-environment > .ab-item:before {
@@ -97,7 +99,7 @@ class StageSwitcher
             // Style the current environment (parent menu item)
             if (defined('WP_ENV') && ! empty($environment_colors[WP_ENV])) { ?>
           #wpadminbar #wp-admin-bar-environment {
-            background-color: <?= $environment_colors[WP_ENV]; ?>;
+            background-color: <?= esc_attr($environment_colors[WP_ENV]); ?>;
           }
       <?php
             }
@@ -108,7 +110,7 @@ class StageSwitcher
                     continue;
                 } ?>
           #wpadminbar #wp-admin-bar-stage_<?= sanitize_html_class(strtolower($stage)); ?> {
-            background-color: <?= $environment_colors[$stage]; ?>;
+            background-color: <?= esc_attr($environment_colors[$stage]); ?>;
           }
       <?php
             }
@@ -117,7 +119,7 @@ class StageSwitcher
     <?php
     }
 
-    private function multisite_url($url)
+    private function multisite_url(string $url): string
     {
         // Normalize URL to ensure it can be successfully parsed
         $url = esc_url($url);
@@ -126,14 +128,21 @@ class StageSwitcher
         $current_stage_host_suffix = wp_parse_url($this->stages[WP_ENV], PHP_URL_HOST);
         $target_stage_host_suffix = wp_parse_url($url, PHP_URL_HOST);
 
+        if (! is_string($current_host) || ! is_string($current_stage_host_suffix) || ! is_string($target_stage_host_suffix)) {
+            return $url;
+        }
+
         // Using preg_replace to anchor to the end of the host string
         $target_host = preg_replace('/'.preg_quote($current_stage_host_suffix).'$/', $target_stage_host_suffix, $current_host);
+        if (! is_string($target_host)) {
+            return $url;
+        }
 
         // Use the stage URL as the base for replacement to keep scheme/port
         return str_replace($target_stage_host_suffix, $target_host, $url);
     }
 
-    private static function default_environment_colors()
+    private static function default_environment_colors(): array
     {
         return [
             'development' => 'firebrick',
