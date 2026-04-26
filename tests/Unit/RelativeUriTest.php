@@ -72,3 +72,14 @@ it('assembles correct target URL with query string', function () {
     expect($adminBar->menus['stage_staging']['href'])->toBe('https://staging.example.com/about?foo=bar');
     expect($adminBar->menus['stage_production']['href'])->toBe('https://example.com/about?foo=bar');
 });
+
+it('preserves the WordPress core path in admin target URLs when WordPress is installed in a subdirectory', function () {
+    $_SERVER['REQUEST_URI'] = '/wp/wp-admin/index.php';
+
+    $adminBar = new WP_Admin_Bar;
+    $switcher = new StageSwitcher;
+    $switcher->admin_bar_stage_switcher($adminBar);
+
+    expect($adminBar->menus['stage_staging']['href'])->toBe('https://staging.example.com/wp/wp-admin/index.php');
+    expect($adminBar->menus['stage_production']['href'])->toBe('https://example.com/wp/wp-admin/index.php');
+});
