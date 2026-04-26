@@ -156,21 +156,32 @@ class StageSwitcher
         $site_path = rtrim((string) wp_parse_url(site_url('/'), PHP_URL_PATH), '/');
         $env_path = rtrim((string) wp_parse_url($this->stages[WP_ENV] ?? '', PHP_URL_PATH), '/');
 
-        $relative_path = null;
+        $prefix = match (true) {
+            $this->path_matches($request_path, $site_path) => $site_path,
+            $this->path_matches($request_path, $env_path) => $env_path,
+            default => null,
+        };
 
-        if ($site_path !== '' && ($request_path === $site_path || str_starts_with($request_path, $site_path.'/'))) {
-            $relative_path = substr($request_path, strlen($site_path));
-        } elseif ($env_path !== '' && ($request_path === $env_path || str_starts_with($request_path, $env_path.'/'))) {
-            $relative_path = substr($request_path, strlen($env_path));
-        }
-
-        if ($relative_path === null) {
+        if ($prefix === null) {
             return $request_uri;
         }
 
-        $relative_path = '/'.ltrim($relative_path, '/');
+        $relative_path = '/'.ltrim(substr($request_path, strlen($prefix)), '/');
+
+        $admin_path = (string) wp_parse_url(admin_url(), PHP_URL_PATH);
+
+        if ($this->path_matches($request_path, $admin_path) || $this->path_matches($relative_path, $admin_path)) {
+            return $request_uri;
+        }
 
         return $relative_path.(is_string($query) && $query !== '' ? "?{$query}" : '');
+    }
+
+    private function path_matches(string $path, string $prefix): bool
+    {
+        $prefix = rtrim($prefix, '/');
+
+        return $prefix !== '' && ($path === $prefix || str_starts_with($path, $prefix.'/'));
     }
 
     private static function default_environment_colors(): array
