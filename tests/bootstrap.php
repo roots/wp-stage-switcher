@@ -23,6 +23,13 @@ if (! function_exists('site_url')) {
     }
 }
 
+if (! function_exists('admin_url')) {
+    function admin_url(string $path = ''): string
+    {
+        return rtrim(site_url('/wp-admin/'), '/').'/'.ltrim($path, '/');
+    }
+}
+
 if (! function_exists('apply_filters')) {
     function apply_filters(string $hook, mixed $value, mixed ...$args): mixed
     {

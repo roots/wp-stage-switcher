@@ -73,6 +73,10 @@ it('assembles correct target URL with query string', function () {
     expect($adminBar->menus['stage_production']['href'])->toBe('https://example.com/about?foo=bar');
 });
 
+it('preserves admin paths instead of stripping the subdirectory prefix', function () {
+    expect(callRelativeUri(switcher(), '/wp/wp-admin/index.php'))->toBe('/wp/wp-admin/index.php');
+});
+
 it('preserves the WordPress core path in admin target URLs when WordPress is installed in a subdirectory', function () {
     $_SERVER['REQUEST_URI'] = '/wp/wp-admin/index.php';
 
